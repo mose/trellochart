@@ -37,7 +37,14 @@ func main() {
       return
     }
     fmt.Printf("%s\n", board.Name)
-    
+    lists, err := board.Lists()
+    if err != nil {
+      fmt.Println("error:", err)
+      return
+    }
+    for listid := range lists {
+      
+    }
   }
 
 }
