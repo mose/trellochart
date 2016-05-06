@@ -10,7 +10,21 @@ import (
 type Config struct {
   ApiKey      string
   Token       string
-  BoardsId    []string
+  User        string
+}
+
+type ListsStats struct {
+  Listname      string
+  Count         int
+}
+
+type BoardStats struct {
+  Boardname    string
+  Lists        []ListsStats
+}
+
+type Stats struct {
+  Boards    []BoardStats
 }
 
 func main() {
@@ -30,20 +44,31 @@ func main() {
     return
   }
 
-  for boardid := range config.BoardsId {
-    board, err := trello.Board(config.BoardsId[boardid])
-    if err != nil {
-      fmt.Println("error:", err)
-      return
-    }
-    fmt.Printf("%s\n", board.Name)
-    lists, err := board.Lists()
-    if err != nil {
-      fmt.Println("error:", err)
-      return
-    }
-    for listid := range lists {
-      
+  user, err := trello.Member(config.User)
+  if err != nil {
+    fmt.Println("error:", err)
+    return
+  }
+
+  boards, err := user.Boards()
+  if err != nil {
+    fmt.Println("error:", err)
+    return
+  }
+
+  if len(boards) > 0 {
+    for _, board := range boards {
+      fmt.Printf("Board: %s\n", board.Name)
+      lists, err := board.Lists()
+      if err != nil {
+        fmt.Println("error:", err)
+        return
+      }
+      for _, list := range lists {
+        fmt.Printf("|  list: %s\n", list.Name)
+        cards, _ := list.Cards()
+
+      }
     }
   }
 
