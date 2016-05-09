@@ -1,8 +1,9 @@
 package main
 
 import (
-  "fmt"
   "os"
+  "fmt"
+  "time"
   "encoding/json"
   "github.com/VojtechVitek/go-trello"
 )
@@ -14,17 +15,18 @@ type Config struct {
 }
 
 type ListsStats struct {
-  Listname      string
-  Count         int
+  Listname      string   `json:"name"`
+  Count         int      `json:"count"`
 }
 
 type BoardStats struct {
-  Boardname    string
-  Lists        []ListsStats
+  Boardname    string       `json:"name"`
+  Lists        []ListsStats `json:"lists"`
 }
 
 type Stats struct {
-  Boards    []BoardStats
+  DateTaken string        `json:"date"`
+  Boards    []BoardStats  `json:"boards"`
 }
 
 func main() {
@@ -32,6 +34,8 @@ func main() {
   file, _ := os.Open("config.json")
   decoder := json.NewDecoder(file)
   config := Config{}
+  stats := Stats{}
+  stats.DateTaken = time.Now().Format("Sat Mar  7 11:06:39 PST 2015")
   err := decoder.Decode(&config)
   if err != nil {
     fmt.Println("error:", err)
@@ -58,6 +62,8 @@ func main() {
 
   if len(boards) > 0 {
     for _, board := range boards {
+      boardStat := BoardStats{}
+      boardStat.Boardname = board.Name
       fmt.Printf("Board: %s\n", board.Name)
       lists, err := board.Lists()
       if err != nil {
@@ -67,9 +73,11 @@ func main() {
       for _, list := range lists {
         fmt.Printf("|  list: %s\n", list.Name)
         cards, _ := list.Cards()
-
+        boardStat.Lists = append(boardStat.Lists, ListsStats{list.Name, len(cards)} )
       }
+      stats.Boards = append(stats.Boards, boardStat)
     }
   }
-
+  fmt.Println("-------------------\n")
+  fmt.Printf("%+v\n", stats)
 }
