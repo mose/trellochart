@@ -38,6 +38,7 @@ func buildIndex(s Stats) {
 <html><head><title>Trello Stats</title></head><body><ul>
 {{range .Boards}}<li><a href="{{.Urlname}}.html">{{.Name}}</a></li>
 {{end}}
+<div>Last update: {{.DateTaken}}</div>
 </ul></body></html>
 `
   t := template.New("Index")

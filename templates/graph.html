@@ -1,8 +1,42 @@
 <html>
 <head>
-<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<meta charset="utf-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.2/Chart.min.js" charset="utf-8"></script>
 </head>
 <body>
-
+<div>
+<canvas id="graph" width="800" height="400"></canvas>
+</div>
+<script>
+var ctx = document.getElementById("graph");
+var data = {
+  labels: [null, null, null, null, null, null, null, null, null],
+  datasets: [
+    {
+      label: "list 1",
+      fill: true,
+      lineTension: 0.3,
+      backgroundColor: "rgba(192,75,192,0.4)",
+      data: [0, 5, 10, 8, 9, 15, 20, 12, 8]
+    },
+    {
+      label: "board 2",
+      fill: true,
+      lineTension: 0.3,
+      backgroundColor: "rgba(75,192,192,0.4)",
+      data: [10, 8, 9, 15, 20, 12, 8, 4, 8]
+    }
+  ]
+};
+var options = {
+  responsive: false,
+  stacked: true
+};
+var graph = new Chart(ctx, {
+  type: 'line',
+  data: data,
+  options: options
+});
+</script>
 </body>
 </html>
