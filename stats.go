@@ -61,13 +61,16 @@ func main() {
       fmt.Printf("Board: %s\n", board.Name)
       lists, err := board.Lists()
       if err != nil {
-        fmt.Println("error:", err)
+        fmt.Println("board.Lists error:", err)
         return
       }
       for _, list := range lists {
-        fmt.Printf("|  list: %s\n", list.Name)
-        cards, _ := list.Cards()
-
+        cards, err := list.Cards()
+        if err != nil {
+          fmt.Println("list.Cards error:", err)
+          return
+        }
+        fmt.Printf("|  list: %s %d\n", list.Name, len(cards))
       }
     }
   }
